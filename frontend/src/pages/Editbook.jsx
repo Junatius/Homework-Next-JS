@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import BookForm from "../components/BookForm";
 import { getBookDetailById } from "../modules/fetch";
+import withAuth from "../components/withAuth";
 
-export default function EditBookPage() {
+function EditBookPage() {
   const { id } = useParams();
   const [book, setBook] = useState(null);
 
@@ -26,3 +27,5 @@ export default function EditBookPage() {
     </Box>
   );
 }
+
+export default withAuth(EditBookPage);

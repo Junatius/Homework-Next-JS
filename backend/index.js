@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
+require('dotenv').config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { PrismaClient } = require("@prisma/client");
@@ -70,11 +71,11 @@ app.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid Credentials" });
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid Credentials" });
     }
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
     res.json({ token });
@@ -107,7 +108,6 @@ app.post("/books", authenticateTokenMiddleware, upload.single('image'), async (r
     console.log("err", err);
     res.status(400).json({ message: "Book already exists" });
   }
-
 });
 
 

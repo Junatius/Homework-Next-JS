@@ -14,6 +14,7 @@ async function registerUser(name, email, password) {
 async function loginUser(email, password) {
   try {
     const response = await instance.post('/login', { email, password });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'Something went wrong');
@@ -21,10 +22,13 @@ async function loginUser(email, password) {
 }
 
 // Function for create book endpoint
-async function createBook(formData) {
+async function createBook(formData, token) {
   try {
     const response = await instance.post('/books', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: { 
+        'Content-Type': 'multipart/form-data',
+        Authorization: token
+      }
     });
     return response.data;
   } catch (error) {
@@ -43,9 +47,14 @@ async function getAllBooks() {
 }
 
 // Function for edit book endpoint
-async function editBook(id, title, author, publisher, year, pages) {
+async function editBook(id, title, author, publisher, year, pages, token) {
   try {
-    const response = await instance.put(`/books/${id}`, { title, author, publisher, year, pages });
+    console.log(id, token);
+    const response = await instance.put(`/books/${id}`, { title, author, publisher, year, pages }, {
+      headers: {
+        Authorization: token
+      }
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'Something went wrong');
@@ -53,14 +62,19 @@ async function editBook(id, title, author, publisher, year, pages) {
 }
 
 // Function for delete book endpoint
-async function deleteBook(id) {
+async function deleteBook(id, token) {
   try {
-    const response = await instance.delete(`/books/${id}`);
+    const response = await instance.delete(`/books/${id}`, {
+      headers: {
+        Authorization: token
+      }
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message || 'Something went wrong');
   }
 }
+
 
 async function getBookDetailById(id) {
   try {
@@ -71,4 +85,4 @@ async function getBookDetailById(id) {
   }
 }
 
-export { registerUser, loginUser, createBook, getAllBooks, editBook, deleteBook,getBookDetailById };
+export { registerUser, loginUser, createBook, getAllBooks, editBook, deleteBook, getBookDetailById };
